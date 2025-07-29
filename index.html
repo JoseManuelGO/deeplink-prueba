@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiTec Deeplink Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .deeplink-url {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .deeplink-url:hover {
+            background: #e9ecef;
+            border-color: #007bff;
+            transform: scale(1.02);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+            margin: 10px;
+            min-width: 200px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #545b62);
+            box-shadow: 0 5px 15px rgba(108,117,125,0.3);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 8px 25px rgba(108,117,125,0.4);
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #e7f3ff;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .info {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #495057;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .deeplink-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .deeplink-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .deeplink-item:hover {
+            background: #e9ecef;
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+        
+        .github-info {
+            background: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #5f6368;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📱</div>
+        <h1>MiTec App</h1>
+        <p class="subtitle">Test de Deeplink - GitHub Pages</p>
+        
+        <div class="github-info">
+            <strong>🚀 Optimizado para GitHub Pages</strong><br>
+            Esta versión funciona mejor que CodePen para probar deeplinks
+        </div>
+        
+        <div class="info">
+            <strong>💡 Instrucciones:</strong><br>
+            Haz clic en el deeplink principal o usa el botón para copiar el comando ADB
+        </div>
+        
+        <div class="deeplink-url" onclick="openDeeplink()" title="Haz clic para probar el deeplink">
+            mitecestudiantes://mi-perfil?isAccessRoute=true
+        </div>
+        
+        <button class="btn pulse" onclick="copyAdbCommand()" id="copyBtn">
+            📋 Copiar Comando ADB
+        </button>
+        
+        <button class="btn btn-secondary" onclick="showInstructions()">
+            📖 Instrucciones
+        </button>
+        
+        <div class="status" id="status"></div>
+        
+        <div style="margin-top: 30px;">
+            <strong>Otros deeplinks disponibles:</strong>
+            <div class="deeplink-grid">
+                <div class="deeplink-item" onclick="openDeeplink('mitecestudiantes://home')">
+                    mitecestudiantes://home
+                </div>
+                <div class="deeplink-item" onclick="openDeeplink('mitecestudiantes://calificaciones')">
+                    mitecestudiantes://calificaciones
+                </div>
+                <div class="deeplink-item" onclick="openDeeplink('mitecestudiantes://horario-estudiante')">
+                    mitecestudiantes://horario-estudiante
+                </div>
+                <div class="deeplink-item" onclick="openDeeplink('mitecestudiantes://estado-cuenta')">
+                    mitecestudiantes://estado-cuenta
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const deeplinkUrl = 'mitecestudiantes://mi-perfil?isAccessRoute=true';
+        const adbCommand = 'adb shell am start -W -a android.intent.action.VIEW -d "mitecestudiantes://mi-perfil?isAccessRoute=true" com.tec.mitecapp';
+        
+        function openDeeplink(url = deeplinkUrl) {
+            const statusDiv = document.getElementById('status');
+            
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'status info';
+            statusDiv.innerHTML = '🔄 Abriendo deeplink...<br><small>Intentando abrir la aplicación MiTec</small>';
+            
+            // Método directo - debería funcionar en GitHub Pages
+            try {
+                window.location.href = url;
+                
+                // Mostrar mensaje de éxito después de un delay
+                setTimeout(() => {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '✅ Deeplink ejecutado correctamente<br><small>Si la app no se abrió, verifica que esté instalada</small>';
+                }, 1000);
+                
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Error al ejecutar deeplink<br><small>Usa el comando ADB como alternativa</small>';
+            }
+        }
+        
+        function copyAdbCommand() {
+            navigator.clipboard.writeText(adbCommand).then(() => {
+                const statusDiv = document.getElementById('status');
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '📋 Comando ADB copiado al portapapeles!<br><small>Pega en tu terminal y ejecuta</small>';
+                
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 4000);
+            }).catch(err => {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = adbCommand;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const statusDiv = document.getElementById('status');
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '📋 Comando ADB copiado al portapapeles!<br><small>Pega en tu terminal y ejecuta</small>';
+                
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 4000);
+            });
+        }
+        
+        function showInstructions() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'status info';
+            statusDiv.innerHTML = `
+                <strong>📖 Instrucciones para GitHub Pages:</strong><br><br>
+                1️⃣ <strong>Método 1:</strong> Haz clic en cualquier deeplink de arriba<br>
+                2️⃣ <strong>Método 2:</strong> Copia el comando ADB y ejecútalo en tu terminal<br>
+                3️⃣ <strong>Método 3:</strong> Abre esta URL en el navegador de tu emulador<br><br>
+                <small>💡 GitHub Pages permite deeplinks sin restricciones de seguridad</small>
+            `;
+        }
+        
+        // Detectar entorno
+        function detectEnvironment() {
+            const userAgent = navigator.userAgent;
+            const isAndroid = /Android/i.test(userAgent);
+            const isEmulator = /Android.*Emulator/i.test(userAgent) || /Android.*SDK/i.test(userAgent);
+            
+            if (isAndroid || isEmulator) {
+                document.querySelector('.info').innerHTML = 
+                    '<strong>📱 Emulador/Dispositivo Android detectado</strong><br>' +
+                    'Los deeplinks deberían funcionar perfectamente en GitHub Pages';
+            } else {
+                document.querySelector('.info').innerHTML = 
+                    '<strong>💻 Navegador de escritorio detectado</strong><br>' +
+                    'Para probar deeplinks, abre esta página en tu emulador Android';
+            }
+        }
+        
+        // Ejecutar al cargar
+        document.addEventListener('DOMContentLoaded', detectEnvironment);
+        
+        // Mostrar instrucciones iniciales
+        setTimeout(() => {
+            showInstructions();
+        }, 1000);
+    </script>
+</body>
+</html> 
