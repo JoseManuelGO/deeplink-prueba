@@ -258,6 +258,83 @@
         const deeplinkUrl = 'mitecestudiantes://mi-perfil?isAccessRoute=true';
         const adbCommand = 'adb shell am start -W -a android.intent.action.VIEW -d "mitecestudiantes://mi-perfil?isAccessRoute=true" com.tec.mitecapp';
         
+        // Función para obtener parámetros de la URL
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        
+        // Función para verificar y ejecutar deeplink automáticamente
+        function checkAndExecuteFromEmail() {
+            const fromEmailParam = getUrlParameter('fromemail');
+            
+            if (fromEmailParam) {
+                console.log('Parámetro fromemail detectado:', fromEmailParam);
+                
+                // Procesar el parámetro para convertir el formato
+                let processedPath = fromEmailParam.trim();
+                
+                // Buscar si hay parámetros en formato /parametro:valor
+                const paramPattern = /\/([^\/]+):([^\/]+)/g;
+                const matches = [...processedPath.matchAll(paramPattern)];
+                
+                if (matches.length > 0) {
+                    // Extraer el path base (antes del primer parámetro)
+                    const firstParamIndex = processedPath.indexOf('/');
+                    const basePath = firstParamIndex > 0 ? processedPath.substring(0, firstParamIndex) : '';
+                    
+                    // Construir los parámetros convertidos
+                    const convertedParams = matches.map(match => {
+                        const paramName = match[1];
+                        const paramValue = match[2];
+                        return `${paramName}=${paramValue}`;
+                    }).join('&');
+                    
+                    // Limpiar el path base (remover espacios y caracteres especiales excepto guiones)
+                    const cleanPath = basePath.replace(/[^a-zA-Z0-9\-_]/g, '');
+                    
+                    if (cleanPath) {
+                        // Construir el deeplink con el formato correcto
+                        const autoDeeplink = `mitecestudiantes://${cleanPath}?${convertedParams}`;
+                        
+                        console.log('Path original:', fromEmailParam);
+                        console.log('Path base:', cleanPath);
+                        console.log('Parámetros convertidos:', convertedParams);
+                        console.log('Ejecutando deeplink automáticamente:', autoDeeplink);
+                        
+                        // Mostrar mensaje de estado
+                        const statusDiv = document.getElementById('status');
+                        statusDiv.style.display = 'block';
+                        statusDiv.className = 'status info';
+                        statusDiv.innerHTML = `🔄 Ejecutando deeplink automáticamente...<br><small>Path detectado: ${cleanPath}</small><br><small>Parámetros: ${convertedParams}</small>`;
+                        
+                        // Ejecutar el deeplink después de un pequeño delay para que se vea el mensaje
+                        setTimeout(() => {
+                            try {
+                                window.location.href = autoDeeplink;
+                                
+                                // Mostrar mensaje de éxito
+                                setTimeout(() => {
+                                    statusDiv.className = 'status success';
+                                    statusDiv.innerHTML = `✅ Deeplink ejecutado automáticamente<br><small>Path: ${cleanPath}</small><br><small>URL generada: ${autoDeeplink}</small>`;
+                                }, 1000);
+                                
+                            } catch (error) {
+                                statusDiv.className = 'status error';
+                                statusDiv.innerHTML = `❌ Error al ejecutar deeplink automático<br><small>Path: ${cleanPath}</small>`;
+                            }
+                        }, 500);
+                        
+                        return true; // Indica que se ejecutó un deeplink automático
+                    }
+                } else {
+                    console.log('No se detectaron parámetros en formato /parametro:valor');
+                }
+            }
+            
+            return false; // No se ejecutó ningún deeplink automático
+        }
+        
         function openDeeplink(url = deeplinkUrl) {
             const statusDiv = document.getElementById('status');
             
@@ -342,12 +419,20 @@
         }
         
         // Ejecutar al cargar
-        document.addEventListener('DOMContentLoaded', detectEnvironment);
-        
-        // Mostrar instrucciones iniciales
-        setTimeout(() => {
-            showInstructions();
-        }, 1000);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Primero verificar si hay parámetro fromemail
+            const autoExecuted = checkAndExecuteFromEmail();
+            
+            // Luego detectar el entorno
+            detectEnvironment();
+            
+            // Mostrar instrucciones solo si no se ejecutó un deeplink automático
+            if (!autoExecuted) {
+                setTimeout(() => {
+                    showInstructions();
+                }, 1000);
+            }
+        });
         
         // Funciones para deeplinks personalizados
         function generateCustomDeeplink() {
