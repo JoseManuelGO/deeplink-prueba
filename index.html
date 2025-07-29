@@ -264,6 +264,22 @@
             return urlParams.get(name);
         }
         
+        // Función para decodificar URL preservando caracteres especiales
+        function decodeUrlPreservingSpecialChars(url) {
+            try {
+                // Decodificar la URL pero preservar los caracteres especiales importantes
+                let decoded = decodeURIComponent(url);
+                
+                // Restaurar los caracteres + que fueron convertidos a espacios
+                decoded = decoded.replace(/\s/g, '+');
+                
+                return decoded;
+            } catch (error) {
+                console.log('Error decodificando URL:', error);
+                return url; // Retornar la URL original si hay error
+            }
+        }
+        
         // Función para verificar y ejecutar deeplink automáticamente
         function checkAndExecuteFromEmail() {
             const fromEmailParam = getUrlParameter('fromemail');
@@ -271,8 +287,12 @@
             if (fromEmailParam) {
                 console.log('Parámetro fromemail detectado:', fromEmailParam);
                 
+                // Decodificar la URL preservando caracteres especiales
+                let decodedParam = decodeUrlPreservingSpecialChars(fromEmailParam);
+                console.log('Parámetro decodificado:', decodedParam);
+                
                 // Procesar el parámetro para convertir el formato
-                let processedPath = fromEmailParam.trim();
+                let processedPath = decodedParam.trim();
                 
                 // Buscar si hay parámetros en formato /parametro:valor
                 const paramPattern = /\/([^\/]+):([^\/]+)/g;
@@ -328,7 +348,23 @@
                         return true; // Indica que se ejecutó un deeplink automático
                     }
                 } else {
-                    console.log('No se detectaron parámetros en formato /parametro:valor');
+                    // Si no hay parámetros en formato /parametro:valor, verificar si es una URL completa
+                    console.log('No se detectaron parámetros en formato /parametro:valor, verificando si es URL completa');
+                    
+                    // Verificar si parece una URL (contiene http o https)
+                    if (processedPath.includes('http://') || processedPath.includes('https://')) {
+                        console.log('URL detectada:', processedPath);
+                        
+                        // Mostrar mensaje de estado para URL
+                        const statusDiv = document.getElementById('status');
+                        statusDiv.style.display = 'block';
+                        statusDiv.className = 'status info';
+                        statusDiv.innerHTML = `🔄 URL detectada en parámetro fromemail<br><small>URL original: ${fromEmailParam}</small><br><small>URL decodificada: ${processedPath}</small><br><small>No se ejecutará deeplink automático</small>`;
+                        
+                        return true; // Indica que se procesó el parámetro
+                    } else {
+                        console.log('No se detectaron parámetros en formato /parametro:valor ni URL completa');
+                    }
                 }
             }
             
