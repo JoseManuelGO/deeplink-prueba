@@ -183,6 +183,16 @@
             font-size: 12px;
             color: #5f6368;
         }
+        
+        .toggle-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
     </style>
 </head>
 <body>
@@ -204,10 +214,48 @@
         <div class="deeplink-url" onclick="openDeeplink()" title="Haz clic para probar el deeplink">
             mitecestudiantes://mi-perfil?isAccessRoute=true
         </div>
+        <div class="deeplink-url" onclick="openDeeplink('mitecestudiantes://https://saprositestecportal.blob.core.windows.net/servacad/Avisos/APP/IDDigital-ALUM-tiendas.html#')" title="Haz clic para probar el deeplink">
+            mitecestudiantes://https://saprositestecportal.blob.core.windows.net/servacad/Avisos/APP/IDDigital-ALUM-tiendas.html#
+        </div>
+        <div class="deeplink-url" onclick="openDeeplink('miteccolaboradores://https://saprositestecportal.blob.core.windows.net/servacad/Avisos/APP/IDDigital-ALUM-tiendas.html#')" title="Haz clic para probar el deeplink">
+            miteccolaboradores://https://saprositestecportal.blob.core.windows.net/servacad/Avisos/APP/IDDigital-ALUM-tiendas.html#
+        </div>
         
         <!-- Nueva sección para generar deeplinks personalizados -->
         <div style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 15px; border: 2px solid #e9ecef;">
             <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px;">🔧 Generar Deeplink Personalizado</h3>
+            
+            <!-- Toggle para seleccionar la app -->
+            <div style="margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <span style="font-weight: bold; color: #333;">Seleccionar App:</span>
+                <div style="display: flex; background: #e9ecef; border-radius: 25px; padding: 3px; position: relative;">
+                    <button id="toggleEstudiantes" class="toggle-btn active" onclick="switchApp('estudiantes')" style="
+                        background: linear-gradient(45deg, #007bff, #0056b3);
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 20px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        min-width: 100px;
+                    ">📚 Estudiantes</button>
+                    <button id="toggleColaboradores" class="toggle-btn" onclick="switchApp('colaboradores')" style="
+                        background: transparent;
+                        color: #666;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 20px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        min-width: 100px;
+                    ">👥 Colaboradores</button>
+                </div>
+            </div>
+            
             <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                 <input type="text" id="customPath" placeholder="Ej: mi-perfil, home, calificaciones" 
                        style="flex: 1; min-width: 200px; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.3s ease;"
@@ -255,6 +303,11 @@
     </div>
 
     <script>
+        // Variables globales para las apps
+        let currentApp = 'estudiantes';
+        let currentAppScheme = 'mitecestudiantes';
+        let currentAppPackage = 'com.tec.mitecapp';
+        
         const deeplinkUrl = 'mitecestudiantes://mi-perfil?isAccessRoute=true';
         const adbCommand = 'adb shell am start -W -a android.intent.action.VIEW -d "mitecestudiantes://mi-perfil?isAccessRoute=true" com.tec.mitecapp';
         
@@ -314,8 +367,8 @@
                     const cleanPath = basePath.replace(/[^a-zA-Z0-9\-_]/g, '');
                     
                     if (cleanPath) {
-                        // Construir el deeplink con el formato correcto
-                        const autoDeeplink = `mitecestudiantes://${cleanPath}?${convertedParams}`;
+                        // Construir el deeplink con el formato correcto usando la app actual
+                        const autoDeeplink = `${currentAppScheme}://${cleanPath}?${convertedParams}`;
                         
                         console.log('Path original:', fromEmailParam);
                         console.log('Path base:', cleanPath);
@@ -470,6 +523,42 @@
             }
         });
         
+        // Función para cambiar entre apps
+        function switchApp(appType) {
+            currentApp = appType;
+            
+            if (appType === 'estudiantes') {
+                currentAppScheme = 'mitecestudiantes';
+                currentAppPackage = 'com.tec.mitecapp';
+                
+                // Actualizar estilos de los botones
+                document.getElementById('toggleEstudiantes').style.background = 'linear-gradient(45deg, #007bff, #0056b3)';
+                document.getElementById('toggleEstudiantes').style.color = 'white';
+                document.getElementById('toggleColaboradores').style.background = 'transparent';
+                document.getElementById('toggleColaboradores').style.color = '#666';
+                
+                // Actualizar placeholder del input
+                document.getElementById('customPath').placeholder = 'Ej: mi-perfil, home, calificaciones';
+            } else {
+                currentAppScheme = 'miteccolaboradores';
+                currentAppPackage = 'com.tec.miteccolaboradores';
+                
+                // Actualizar estilos de los botones
+                document.getElementById('toggleColaboradores').style.background = 'linear-gradient(45deg, #28a745, #1e7e34)';
+                document.getElementById('toggleColaboradores').style.color = 'white';
+                document.getElementById('toggleEstudiantes').style.background = 'transparent';
+                document.getElementById('toggleEstudiantes').style.color = '#666';
+                
+                // Actualizar placeholder del input
+                document.getElementById('customPath').placeholder = 'Ej: dashboard, perfil, reportes';
+            }
+            
+            console.log(`App cambiada a: ${currentApp} (${currentAppScheme})`);
+            
+            // Regenerar deeplink si hay uno existente
+            generateCustomDeeplink();
+        }
+        
         // Funciones para deeplinks personalizados
         function generateCustomDeeplink() {
             const pathInput = document.getElementById('customPath');
@@ -479,13 +568,13 @@
             const path = pathInput.value.trim();
             
             if (path) {
-                const customUrl = `mitecestudiantes://${path}`;
+                const customUrl = `${currentAppScheme}://${path}?isAccessRoute=true`;
                 urlDiv.textContent = customUrl;
                 resultDiv.style.display = 'block';
                 
                 // Guardar en variable global para usar en otras funciones
                 window.customDeeplinkUrl = customUrl;
-                window.customAdbCommand = `adb shell am start -W -a android.intent.action.VIEW -d "${customUrl}" com.tec.mitecapp`;
+                window.customAdbCommand = `adb shell am start -W -a android.intent.action.VIEW -d "${customUrl}" ${currentAppPackage}`;
             } else {
                 resultDiv.style.display = 'none';
             }
