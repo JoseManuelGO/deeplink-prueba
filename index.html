@@ -214,11 +214,11 @@
         <div class="deeplink-url" onclick="openDeeplink()" title="Haz clic para probar el deeplink">
             mitecestudiantes://mi-perfil?isAccessRoute=true
         </div>
-        <div class="deeplink-url" onclick="openDeeplink('mitecestudiantes://https://saprositestecportal.blob.core.windows.net/servacad/Avisos/APP/IDDigital-ALUM-tiendas.html#')" title="Haz clic para probar el deeplink">
-            mitecestudiantes://https://saprositestecportal.blob.core.windows.net/servacad/Avisos/APP/IDDigital-ALUM-tiendas.html#
+        <div class="deeplink-url" onclick="openDeeplink('mitecestudiantes://idDigital')" title="Haz clic para probar el deeplink">
+            mitecestudiantes://idDigital
         </div>
-        <div class="deeplink-url" onclick="openDeeplink('miteccolaboradores://https://saprositestecportal.blob.core.windows.net/servacad/Avisos/APP/IDDigital-ALUM-tiendas.html#')" title="Haz clic para probar el deeplink">
-            miteccolaboradores://https://saprositestecportal.blob.core.windows.net/servacad/Avisos/APP/IDDigital-ALUM-tiendas.html#
+        <div class="deeplink-url" onclick="openDeeplink('miteccolaboradores://id-colaboradores')" title="Haz clic para probar el deeplink">
+            miteccolaboradores://id-colaboradores
         </div>
         
         <!-- Nueva sección para generar deeplinks personalizados -->
@@ -259,6 +259,7 @@
             <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                 <input type="text" id="customPath" placeholder="Ej: mi-perfil, home, calificaciones" 
                        style="flex: 1; min-width: 200px; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.3s ease;"
+                       autocapitalize="none" autocomplete="off" spellcheck="false"
                        onkeyup="generateCustomDeeplink()">
                 <button class="btn" onclick="generateCustomDeeplink()" style="min-width: auto; padding: 12px 20px;">
                     🔗 Generar
