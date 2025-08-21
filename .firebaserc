@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "superapp-mitec-colaboradores"
+  },
+  "targets": {
+    "superapp-mitec-colaboradores": {
+      "hosting": {
+        "main": [
+          "superapp-mitec-colaboradores"
+        ],
+        "deeplink-test": [
+          "deeplink-test-mobile"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

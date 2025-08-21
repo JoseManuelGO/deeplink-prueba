@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiTec Deeplink Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .deeplink-url {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .deeplink-url:hover {
+            background: #e9ecef;
+            border-color: #007bff;
+            transform: scale(1.02);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+            margin: 10px;
+            min-width: 200px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #545b62);
+            box-shadow: 0 5px 15px rgba(108,117,125,0.3);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 8px 25px rgba(108,117,125,0.4);
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #e7f3ff;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .info {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #495057;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .deeplink-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .deeplink-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .deeplink-item:hover {
+            background: #e9ecef;
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+        
+        .github-info {
+            background: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #5f6368;
+        }
+        
+        .toggle-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📱</div>
+        <h1>MiTec App</h1>
+        <p class="subtitle">Test de Deeplink - GitHub Pages</p>
+        
+        <div class="github-info">
+            <strong>🚀 Optimizado para GitHub Pages</strong><br>
+            Esta versión funciona mejor que CodePen para probar deeplinks
+        </div>
+        
+        <div class="info">
+            <strong>💡 Instrucciones:</strong><br>
+            Haz clic en el deeplink principal o usa el botón para copiar el comando ADB
+        </div>
+        
+        <div class="deeplink-url" onclick="openDeeplink()" title="Haz clic para probar el deeplink">
+            mitecestudiantes://mi-perfil?isAccessRoute=true
+        </div>
+        <div class="deeplink-url" onclick="openDeeplink('mitecestudiantes://idDigital')" title="Haz clic para probar el deeplink">
+            mitecestudiantes://idDigital
+        </div>
+        <div class="deeplink-url" onclick="openDeeplink('miteccolaboradores://id-colaboradores')" title="Haz clic para probar el deeplink">
+            miteccolaboradores://id-colaboradores
+        </div>
+        
+        <!-- Nueva sección para generar deeplinks personalizados -->
+        <div style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 15px; border: 2px solid #e9ecef;">
+            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px;">🔧 Generar Deeplink Personalizado</h3>
+            
+            <!-- Toggle para seleccionar la app -->
+            <div style="margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <span style="font-weight: bold; color: #333;">Seleccionar App:</span>
+                <div style="display: flex; background: #e9ecef; border-radius: 25px; padding: 3px; position: relative;">
+                    <button id="toggleEstudiantes" class="toggle-btn active" onclick="switchApp('estudiantes')" style="
+                        background: linear-gradient(45deg, #007bff, #0056b3);
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 20px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        min-width: 100px;
+                    ">📚 Estudiantes</button>
+                    <button id="toggleColaboradores" class="toggle-btn" onclick="switchApp('colaboradores')" style="
+                        background: transparent;
+                        color: #666;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 20px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        min-width: 100px;
+                    ">👥 Colaboradores</button>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                <input type="text" id="customPath" placeholder="Ej: mi-perfil, home, calificaciones" 
+                       style="flex: 1; min-width: 200px; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.3s ease;"
+                       autocapitalize="none" autocomplete="off" spellcheck="false"
+                       onkeyup="generateCustomDeeplink()">
+                <button class="btn" onclick="generateCustomDeeplink()" style="min-width: auto; padding: 12px 20px;">
+                    🔗 Generar
+                </button>
+            </div>
+            <div id="customDeeplinkResult" style="display: none; background: #e7f3ff; border: 2px solid #007bff; border-radius: 10px; padding: 15px; margin-top: 15px;">
+                <div style="font-weight: bold; margin-bottom: 10px; color: #007bff;">Deeplink Generado:</div>
+                <div id="customDeeplinkUrl" class="deeplink-url" style="margin: 10px 0; cursor: pointer;" onclick="openCustomDeeplink()"></div>
+                <button class="btn btn-secondary" onclick="copyCustomAdbCommand()" style="min-width: auto; padding: 10px 20px; font-size: 14px;">
+                    📋 Copiar ADB
+                </button>
+            </div>
+        </div>
+        
+        <button class="btn pulse" onclick="copyAdbCommand()" id="copyBtn">
+            📋 Copiar Comando ADB
+        </button>
+        
+        <button class="btn btn-secondary" onclick="showInstructions()">
+            📖 Instrucciones
+        </button>
+        
+        <div class="status" id="status"></div>
+        
+        <div style="margin-top: 30px;">
+            <strong>Otros deeplinks disponibles:</strong>
+            <div class="deeplink-grid">
+                <div class="deeplink-item" onclick="openDeeplink('mitecestudiantes://home?isAccessRoute=true')">
+                    mitecestudiantes://home?isAccessRoute=true
+                </div>
+                <div class="deeplink-item" onclick="openDeeplink('mitecestudiantes://calificaciones?isAccessRoute=true')">
+                    mitecestudiantes://calificaciones?isAccessRoute=true
+                </div>
+                <div class="deeplink-item" onclick="openDeeplink('mitecestudiantes://horario-estudiante?isAccessRoute=true')">
+                    mitecestudiantes://horario-estudiante?isAccessRoute=true
+                </div>
+                <div class="deeplink-item" onclick="openDeeplink('mitecestudiantes://estado-cuenta?isAccessRoute=true')">
+                    mitecestudiantes://estado-cuenta?isAccessRoute=true
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales para las apps
+        let currentApp = 'estudiantes';
+        let currentAppScheme = 'mitecestudiantes';
+        let currentAppPackage = 'com.tec.mitecapp';
+        
+        const deeplinkUrl = 'mitecestudiantes://mi-perfil?isAccessRoute=true';
+        const adbCommand = 'adb shell am start -W -a android.intent.action.VIEW -d "mitecestudiantes://mi-perfil?isAccessRoute=true" com.tec.mitecapp';
+        
+        // Función para obtener parámetros de la URL
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        
+        // Función para decodificar URL preservando caracteres especiales
+        function decodeUrlPreservingSpecialChars(url) {
+            try {
+                // Decodificar la URL pero preservar los caracteres especiales importantes
+                let decoded = decodeURIComponent(url);
+                
+                // Restaurar los caracteres + que fueron convertidos a espacios
+                decoded = decoded.replace(/\s/g, '+');
+                
+                return decoded;
+            } catch (error) {
+                console.log('Error decodificando URL:', error);
+                return url; // Retornar la URL original si hay error
+            }
+        }
+        
+        // Función para verificar y ejecutar deeplink automáticamente
+        function checkAndExecuteFromEmail() {
+            const fromEmailParam = getUrlParameter('fromemail');
+            
+            if (fromEmailParam) {
+                console.log('Parámetro fromemail detectado:', fromEmailParam);
+                
+                // Decodificar la URL preservando caracteres especiales
+                let decodedParam = decodeUrlPreservingSpecialChars(fromEmailParam);
+                console.log('Parámetro decodificado:', decodedParam);
+                
+                // Procesar el parámetro para convertir el formato
+                let processedPath = decodedParam.trim();
+                
+                // Buscar si hay parámetros en formato /parametro:valor
+                const paramPattern = /\/([^\/]+):([^\/]+)/g;
+                const matches = [...processedPath.matchAll(paramPattern)];
+                
+                if (matches.length > 0) {
+                    // Extraer el path base (antes del primer parámetro)
+                    const firstParamIndex = processedPath.indexOf('/');
+                    const basePath = firstParamIndex > 0 ? processedPath.substring(0, firstParamIndex) : '';
+                    
+                    // Construir los parámetros convertidos
+                    const convertedParams = matches.map(match => {
+                        const paramName = match[1];
+                        const paramValue = match[2];
+                        return `${paramName}=${paramValue}`;
+                    }).join('&');
+                    
+                    // Limpiar el path base (remover espacios y caracteres especiales excepto guiones)
+                    const cleanPath = basePath.replace(/[^a-zA-Z0-9\-_]/g, '');
+                    
+                    if (cleanPath) {
+                        // Construir el deeplink con el formato correcto usando la app actual
+                        const autoDeeplink = `${currentAppScheme}://${cleanPath}?${convertedParams}`;
+                        
+                        console.log('Path original:', fromEmailParam);
+                        console.log('Path base:', cleanPath);
+                        console.log('Parámetros convertidos:', convertedParams);
+                        console.log('Ejecutando deeplink automáticamente:', autoDeeplink);
+                        
+                        // Mostrar mensaje de estado
+                        const statusDiv = document.getElementById('status');
+                        statusDiv.style.display = 'block';
+                        statusDiv.className = 'status info';
+                        statusDiv.innerHTML = `🔄 Ejecutando deeplink automáticamente...<br><small>Path detectado: ${cleanPath}</small><br><small>Parámetros: ${convertedParams}</small>`;
+                        
+                        // Ejecutar el deeplink después de un pequeño delay para que se vea el mensaje
+                        setTimeout(() => {
+                            try {
+                                window.location.href = autoDeeplink;
+                                
+                                // Mostrar mensaje de éxito
+                                setTimeout(() => {
+                                    statusDiv.className = 'status success';
+                                    statusDiv.innerHTML = `✅ Deeplink ejecutado automáticamente<br><small>Path: ${cleanPath}</small><br><small>URL generada: ${autoDeeplink}</small>`;
+                                }, 1000);
+                                
+                            } catch (error) {
+                                statusDiv.className = 'status error';
+                                statusDiv.innerHTML = `❌ Error al ejecutar deeplink automático<br><small>Path: ${cleanPath}</small>`;
+                            }
+                        }, 500);
+                        
+                        return true; // Indica que se ejecutó un deeplink automático
+                    }
+                } else {
+                    // Si no hay parámetros en formato /parametro:valor, verificar si es una URL completa
+                    console.log('No se detectaron parámetros en formato /parametro:valor, verificando si es URL completa');
+                    
+                    // Verificar si parece una URL (contiene http o https)
+                    if (processedPath.includes('http://') || processedPath.includes('https://')) {
+                        console.log('URL detectada:', processedPath);
+                        
+                        // Mostrar mensaje de estado para URL
+                        const statusDiv = document.getElementById('status');
+                        statusDiv.style.display = 'block';
+                        statusDiv.className = 'status info';
+                        statusDiv.innerHTML = `🔄 URL detectada en parámetro fromemail<br><small>URL original: ${fromEmailParam}</small><br><small>URL decodificada: ${processedPath}</small><br><small>No se ejecutará deeplink automático</small>`;
+                        
+                        return true; // Indica que se procesó el parámetro
+                    } else {
+                        console.log('No se detectaron parámetros en formato /parametro:valor ni URL completa');
+                    }
+                }
+            }
+            
+            return false; // No se ejecutó ningún deeplink automático
+        }
+        
+        function openDeeplink(url = deeplinkUrl) {
+            const statusDiv = document.getElementById('status');
+            
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'status info';
+            statusDiv.innerHTML = '🔄 Abriendo deeplink...<br><small>Intentando abrir la aplicación MiTec</small>';
+            
+            // Método directo - debería funcionar en GitHub Pages
+            try {
+                window.location.href = url;
+                
+                // Mostrar mensaje de éxito después de un delay
+                setTimeout(() => {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '✅ Deeplink ejecutado correctamente<br><small>Si la app no se abrió, verifica que esté instalada</small>';
+                }, 1000);
+                
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Error al ejecutar deeplink<br><small>Usa el comando ADB como alternativa</small>';
+            }
+        }
+        
+        function copyAdbCommand() {
+            navigator.clipboard.writeText(adbCommand).then(() => {
+                const statusDiv = document.getElementById('status');
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '📋 Comando ADB copiado al portapapeles!<br><small>Pega en tu terminal y ejecuta</small>';
+                
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 4000);
+            }).catch(err => {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = adbCommand;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const statusDiv = document.getElementById('status');
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '📋 Comando ADB copiado al portapapeles!<br><small>Pega en tu terminal y ejecuta</small>';
+                
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 4000);
+            });
+        }
+        
+        function showInstructions() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'status info';
+            statusDiv.innerHTML = `
+                <strong>📖 Instrucciones para GitHub Pages:</strong><br><br>
+                1️⃣ <strong>Método 1:</strong> Haz clic en cualquier deeplink de arriba<br>
+                2️⃣ <strong>Método 2:</strong> Copia el comando ADB y ejecútalo en tu terminal<br>
+                3️⃣ <strong>Método 3:</strong> Abre esta URL en el navegador de tu emulador<br><br>
+                <small>💡 GitHub Pages permite deeplinks sin restricciones de seguridad</small>
+            `;
+        }
+        
+        // Detectar entorno
+        function detectEnvironment() {
+            const userAgent = navigator.userAgent;
+            const isAndroid = /Android/i.test(userAgent);
+            const isEmulator = /Android.*Emulator/i.test(userAgent) || /Android.*SDK/i.test(userAgent);
+            
+            if (isAndroid || isEmulator) {
+                document.querySelector('.info').innerHTML = 
+                    '<strong>📱 Emulador/Dispositivo Android detectado</strong><br>' +
+                    'Los deeplinks deberían funcionar perfectamente en GitHub Pages';
+            } else {
+                document.querySelector('.info').innerHTML = 
+                    '<strong>💻 Navegador de escritorio detectado</strong><br>' +
+                    'Para probar deeplinks, abre esta página en tu emulador Android';
+            }
+        }
+        
+        // Ejecutar al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Primero verificar si hay parámetro fromemail
+            const autoExecuted = checkAndExecuteFromEmail();
+            
+            // Luego detectar el entorno
+            detectEnvironment();
+            
+            // Mostrar instrucciones solo si no se ejecutó un deeplink automático
+            if (!autoExecuted) {
+                setTimeout(() => {
+                    showInstructions();
+                }, 1000);
+            }
+        });
+        
+        // Función para cambiar entre apps
+        function switchApp(appType) {
+            currentApp = appType;
+            
+            if (appType === 'estudiantes') {
+                currentAppScheme = 'mitecestudiantes';
+                currentAppPackage = 'com.tec.mitecapp';
+                
+                // Actualizar estilos de los botones
+                document.getElementById('toggleEstudiantes').style.background = 'linear-gradient(45deg, #007bff, #0056b3)';
+                document.getElementById('toggleEstudiantes').style.color = 'white';
+                document.getElementById('toggleColaboradores').style.background = 'transparent';
+                document.getElementById('toggleColaboradores').style.color = '#666';
+                
+                // Actualizar placeholder del input
+                document.getElementById('customPath').placeholder = 'Ej: mi-perfil, home, calificaciones';
+            } else {
+                currentAppScheme = 'miteccolaboradores';
+                currentAppPackage = 'com.tec.miteccolaboradores';
+                
+                // Actualizar estilos de los botones
+                document.getElementById('toggleColaboradores').style.background = 'linear-gradient(45deg, #28a745, #1e7e34)';
+                document.getElementById('toggleColaboradores').style.color = 'white';
+                document.getElementById('toggleEstudiantes').style.background = 'transparent';
+                document.getElementById('toggleEstudiantes').style.color = '#666';
+                
+                // Actualizar placeholder del input
+                document.getElementById('customPath').placeholder = 'Ej: dashboard, perfil, reportes';
+            }
+            
+            console.log(`App cambiada a: ${currentApp} (${currentAppScheme})`);
+            
+            // Regenerar deeplink si hay uno existente
+            generateCustomDeeplink();
+        }
+        
+        // Funciones para deeplinks personalizados
+        function generateCustomDeeplink() {
+            const pathInput = document.getElementById('customPath');
+            const resultDiv = document.getElementById('customDeeplinkResult');
+            const urlDiv = document.getElementById('customDeeplinkUrl');
+            
+            const path = pathInput.value.trim();
+            
+            if (path) {
+                const customUrl = `${currentAppScheme}://${path}`;
+                urlDiv.textContent = customUrl;
+                resultDiv.style.display = 'block';
+                
+                // Guardar en variable global para usar en otras funciones
+                window.customDeeplinkUrl = customUrl;
+                window.customAdbCommand = `adb shell am start -W -a android.intent.action.VIEW -d "${customUrl}" ${currentAppPackage}`;
+            } else {
+                resultDiv.style.display = 'none';
+            }
+        }
+        
+        function openCustomDeeplink() {
+            if (window.customDeeplinkUrl) {
+                openDeeplink(window.customDeeplinkUrl);
+            }
+        }
+        
+        function copyCustomAdbCommand() {
+            if (window.customAdbCommand) {
+                navigator.clipboard.writeText(window.customAdbCommand).then(() => {
+                    const statusDiv = document.getElementById('status');
+                    statusDiv.style.display = 'block';
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '📋 Comando ADB personalizado copiado al portapapeles!<br><small>Pega en tu terminal y ejecuta</small>';
+                    
+                    setTimeout(() => {
+                        statusDiv.style.display = 'none';
+                    }, 4000);
+                }).catch(err => {
+                    // Fallback
+                    const textArea = document.createElement('textarea');
+                    textArea.value = window.customAdbCommand;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    const statusDiv = document.getElementById('status');
+                    statusDiv.style.display = 'block';
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '📋 Comando ADB personalizado copiado al portapapeles!<br><small>Pega en tu terminal y ejecuta</small>';
+                    
+                    setTimeout(() => {
+                        statusDiv.style.display = 'none';
+                    }, 4000);
+                });
+            }
+        }
+    </script>
+</body>
+</html> 
